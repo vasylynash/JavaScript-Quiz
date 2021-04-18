@@ -6,6 +6,7 @@ var nextButton = document.getElementById("next");
 var pages = document.getElementsByClassName("page");
 
 var currentPage = 0;
+var userAnswers = [];
 
 previousButton.style.display = "none";
 // submitButton.style.display = "none";
@@ -35,7 +36,7 @@ var quizQuestions = [
             "Declaration of Modules",
             "Document Object Model",
         ],
-        correctAnswer: 0
+        correctAnswer: 1
     }
 ];
 
@@ -60,6 +61,7 @@ function showQuestion(quizQuestionText) {
 }
 
 function showAnswers(quizAnswersArray) {
+    var selected = userAnswers[currentPage];
     var answers = document.createElement("div");
     answers.setAttribute("class", "answers");
     quizContainer.append(answers);
@@ -68,6 +70,10 @@ function showAnswers(quizAnswersArray) {
         var answer = document.createElement("input");
         answer.setAttribute("type", "radio");
         answer.setAttribute("value", `${index}`);
+        answer.setAttribute("name", "ans");
+        if (index == selected) {
+            answer.checked = true;
+        }
         var label = document.createElement("label");
         label.innerText = `${quizAnswer}`;
         answers.append(answerDiv);
@@ -112,8 +118,50 @@ function showPreviousPage() {
     showQandA(quizQuestions[currentPage]);
 }
 
-function getResults() {
+function saveUserAnswer() {
+    let answer = document.querySelector("[name='ans']:checked");
+    if (answer) {
+        userAnswers[currentPage] = answer.value;
+    }
+}
+function getScore() {
+    let count = 0;
+    for (let i = 0; i < userAnswers.length; i++) {
+        if (userAnswers[i] == quizQuestions[i].correctAnswer) {
+            count++;
+        }
+    }
+    return count;
+}
 
+function showResultPage() {
+    quizContainer.innerHTML = "";
+    previousButton.style.display = "none";
+    nextButton.style.display = "none";
+    submitButton.style.display = "none";
+    var scoreData = document.createElement("div");
+    quizContainer.append(scoreData);
+    scoreData.innerText = `You score: ` + getScore();
+    var initialsInputDiv = document.createElement("div");
+    quizContainer.append(initialsInputDiv);
+    var initialsLabel = document.createElement("label");
+    initialsInputDiv.append(initialsLabel);
+    initialsLabel.innerText = "Please enter your initials: "
+    var initialsInputField = document.createElement("input");
+    initialsInputDiv.append(initialsInputField);
+    initialsInputField.setAttribute("style", "margin: 10px");
+    initialsInputField.setAttribute("id", "initials");
+    var saveButton = document.createElement("button");
+    document.body.append(saveButton);
+    saveButton.innerText = "Save";
+    saveButton.addEventListener("click", saveToLocalStorage);
+}
+
+function saveToLocalStorage(highscore) {
+    var highscore = [];
+    highscore[0] = initialsInputField.value;
+    highscore[1] = getScore();
+    localStorage.setItem("highscore", JSON.stringify(highscore));
 }
 
 function init() {
@@ -123,10 +171,19 @@ function init() {
     // clearPage();
 
     // showQandA(quizQuestions[1]);
+    // saveUserAnswer();
 }
 
+
+nextButton.addEventListener("click", saveUserAnswer);
 nextButton.addEventListener("click", showNextPage);
+previousButton.addEventListener("click", saveUserAnswer);
 previousButton.addEventListener("click", showPreviousPage);
+submitButton.addEventListener("click", saveUserAnswer);
+submitButton.addEventListener("click", getScore);
+submitButton.addEventListener("click", showResultPage);
+// saveButton.addEventListener("click", saveToLocalStorage);
+
 
 
 
