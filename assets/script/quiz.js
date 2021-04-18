@@ -54,7 +54,6 @@ var quizQuestions = [
             "Extended Calculation of Math Abstractions",
             "European Computer Manufacturer's Association",
             "Enhanced Computer Manufacturer's Association",
-            "Extended Calculation of Modular Abstractions"
         ],
         correctAnswer: 1
     },
@@ -217,7 +216,7 @@ function onSave() {
     quizContainer.append(showHighscoresButton);
     var startOverButton = document.createElement("button");
     startOverButton.setAttribute("id", "start");
-    startOverButton.innerText = "Re-start";
+    startOverButton.innerText = "Start over";
     quizContainer.append(startOverButton);
 
 }
