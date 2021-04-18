@@ -4,6 +4,7 @@ var submitButton = document.getElementById("submit");
 var previousButton = document.getElementById("previous");
 var nextButton = document.getElementById("next");
 var pages = document.getElementsByClassName("page");
+var timer = document.getElementById("timer");
 
 var currentPage = 0;
 var userAnswers = [];
@@ -39,6 +40,17 @@ var quizQuestions = [
         correctAnswer: 1
     }
 ];
+
+var timeLeft = 60;
+
+const timerValue = setInterval(function () {
+    timeLeft--;
+    timer.innerText = timeLeft;
+    if (timeLeft <= 0) {
+        saveUserAnswer();
+        showResultPage();
+    }
+}, 1000);
 
 
 function addPage() {
@@ -122,8 +134,12 @@ function saveUserAnswer() {
     let answer = document.querySelector("[name='ans']:checked");
     if (answer) {
         userAnswers[currentPage] = answer.value;
+        if (answer.value != quizQuestions[currentPage].correctAnswer) {
+            timeLeft -= 5;
+        }
     }
 }
+
 function getScore() {
     let count = 0;
     for (let i = 0; i < userAnswers.length; i++) {
@@ -141,7 +157,7 @@ function showResultPage() {
     submitButton.style.display = "none";
     var scoreData = document.createElement("div");
     quizContainer.append(scoreData);
-    scoreData.innerText = `You score: ` + getScore();
+    scoreData.innerText = `You score is: ` + getScore();
     var initialsInputDiv = document.createElement("div");
     quizContainer.append(initialsInputDiv);
     var initialsLabel = document.createElement("label");
@@ -155,27 +171,38 @@ function showResultPage() {
     document.body.append(saveButton);
     saveButton.setAttribute("id", "save");
     saveButton.innerText = "Save";
+    clearInterval(timerValue);
+    timer.style.display = "none";
 }
 
 function saveToLocalStorage() {
+    const initialsInputField = document.getElementById("initials");
+    const userInput = initialsInputField.value;
+    const highscores = JSON.parse(localStorage.getItem("highscores") || "[]");
+    highscores.push({ initials: userInput, score: getScore() });
+    localStorage.setItem("highscores", JSON.stringify(highscores));
+
+}
+
+function onSave() {
+    quizContainer.innerHTML = "";
     var saveButton = document.getElementById("save");
-    var initialsInputField = document.getElementById("initials");
-    var highscore = [];
-    var userInput = initialsInputField.value;
-    highscore[0] = userInput;
-    console.log(initialsInputField.value);
-    highscore[1] = getScore();
-    localStorage.setItem("highscore", JSON.stringify(highscore));
+    saveButton.style.display = "none";
+    var showHighscoresButton = document.createElement("button");
+    showHighscoresButton.setAttribute("id", "highscores")
+    showHighscoresButton.innerText = "View Highscores";
+    quizContainer.append(showHighscoresButton);
+    var startOverButton = document.createElement("button");
+    startOverButton.setAttribute("id", "start");
+    startOverButton.innerText = "Re-start";
+    quizContainer.append(startOverButton);
+
 }
 
 function init() {
+    // startTimer();
     addPage();
-    // showPage(currentPage);
     showQandA(quizQuestions[currentPage]);
-    // clearPage();
-
-    // showQandA(quizQuestions[1]);
-    // saveUserAnswer();
 }
 
 
@@ -184,12 +211,32 @@ nextButton.addEventListener("click", showNextPage);
 previousButton.addEventListener("click", saveUserAnswer);
 previousButton.addEventListener("click", showPreviousPage);
 submitButton.addEventListener("click", saveUserAnswer);
-submitButton.addEventListener("click", getScore);
+// submitButton.addEventListener("click", getScore);
 submitButton.addEventListener("click", showResultPage);
-// saveButton.addEventListener("click", saveToLocalStorage);
-// quizContainer.addEventListener("click", "save", saveToLocalStorage);
 
+document.addEventListener("click", function (event) {
+    if (event.target && event.target.id == "save") {
+        saveToLocalStorage();
+    }
+})
 
+document.addEventListener("click", function (event) {
+    if (event.target && event.target.id == "save") {
+        onSave();
+    }
+})
+
+document.addEventListener("click", function (event) {
+    if (event.target && event.target.id == "highscores") {
+        document.location = "highscores.html";
+    }
+})
+
+document.addEventListener("click", function (event) {
+    if (event.target && event.target.id == "start") {
+        document.location = "index.html";
+    }
+})
 
 
 init();
