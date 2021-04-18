@@ -153,13 +153,17 @@ function showResultPage() {
     initialsInputField.setAttribute("id", "initials");
     var saveButton = document.createElement("button");
     document.body.append(saveButton);
+    saveButton.setAttribute("id", "save");
     saveButton.innerText = "Save";
-    saveButton.addEventListener("click", saveToLocalStorage);
 }
 
-function saveToLocalStorage(highscore) {
+function saveToLocalStorage() {
+    var saveButton = document.getElementById("save");
+    var initialsInputField = document.getElementById("initials");
     var highscore = [];
-    highscore[0] = initialsInputField.value;
+    var userInput = initialsInputField.value;
+    highscore[0] = userInput;
+    console.log(initialsInputField.value);
     highscore[1] = getScore();
     localStorage.setItem("highscore", JSON.stringify(highscore));
 }
@@ -183,7 +187,7 @@ submitButton.addEventListener("click", saveUserAnswer);
 submitButton.addEventListener("click", getScore);
 submitButton.addEventListener("click", showResultPage);
 // saveButton.addEventListener("click", saveToLocalStorage);
-
+// quizContainer.addEventListener("click", "save", saveToLocalStorage);
 
 
 
