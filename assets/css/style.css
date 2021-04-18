@@ -18,6 +18,10 @@ h1{
   color: #fff;
 }
 
+nav {
+    align-self:center;
+}
+
 a {
   text-decoration: none;
   color: #fff;
@@ -74,13 +78,4 @@ button:hover{
     flex-direction: row;
     justify-content: space-between;
     background-color: #444;
-}
-
-/* #highscores {
-    color: white;
-    
-} */
-
-nav {
-    align-self:center;
 }
