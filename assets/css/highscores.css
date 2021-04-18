@@ -20,8 +20,15 @@ h1{
 
 .highscore-container{
   position: relative;
-  height: 200px;
   margin-top: 40px;
+}
+
+h2 {
+    color: rgb(47, 82, 240);
+}
+
+p {
+    line-height: 1.6;
 }
 
 button{

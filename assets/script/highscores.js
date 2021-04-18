@@ -6,7 +6,7 @@ function init() {
         b.score - a.score
     );
     highscores.forEach(element => {
-        var row = document.createElement("div");
+        var row = document.createElement("p");
         row.innerText = element.initials + " " + element.score;
         highscoresContainer.append(row);
     });

@@ -10,7 +10,7 @@ var currentPage = 0;
 var userAnswers = [];
 
 previousButton.style.display = "none";
-// submitButton.style.display = "none";
+submitButton.style.display = "none";
 
 var quizQuestions = [
     {
@@ -38,7 +38,26 @@ var quizQuestions = [
             "Document Object Model",
         ],
         correctAnswer: 1
-    }
+    },
+    {
+        question: "What does reduce() method return?",
+        answers: [
+            "New array",
+            "Empty array",
+            "Single value"
+        ],
+        correctAnswer: 2
+    },
+    {
+        question: "What does ECMA in ECMAScript mean?",
+        answers: [
+            "Extended Calculation of Math Abstractions",
+            "European Computer Manufacturer's Association",
+            "Enhanced Computer Manufacturer's Association",
+            "Extended Calculation of Modular Abstractions"
+        ],
+        correctAnswer: 1
+    },
 ];
 
 var timeLeft = 60;
@@ -103,6 +122,7 @@ function showNextPage() {
     currentPage++;
     if (currentPage === quizQuestions.length - 1) {
         nextButton.style.display = "none";
+        submitButton.style.display = "inline-block";
     } else {
         nextButton.style.display = "inline-block";
     }
@@ -121,11 +141,14 @@ function showPreviousPage() {
         nextButton.style.display = "none";
     } else {
         nextButton.style.display = "inline-block";
+        submitButton.style.display = "none";
     }
     if (currentPage === 0) {
         previousButton.style.display = "none";
     } else {
         previousButton.style.display = "inline-block";
+        submitButton.style.display = "none";
+
     }
     showQandA(quizQuestions[currentPage]);
 }
@@ -200,7 +223,6 @@ function onSave() {
 }
 
 function init() {
-    // startTimer();
     addPage();
     showQandA(quizQuestions[currentPage]);
 }
@@ -211,7 +233,6 @@ nextButton.addEventListener("click", showNextPage);
 previousButton.addEventListener("click", saveUserAnswer);
 previousButton.addEventListener("click", showPreviousPage);
 submitButton.addEventListener("click", saveUserAnswer);
-// submitButton.addEventListener("click", getScore);
 submitButton.addEventListener("click", showResultPage);
 
 document.addEventListener("click", function (event) {
